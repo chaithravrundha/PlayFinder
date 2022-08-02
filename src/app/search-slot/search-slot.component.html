@@ -1,1 +1,56 @@
+<div class="title">
+    <h2>View details of Slots</h2>
+</div>
+    <form class="center">
+        <div class="row">
+          <div class="col">
+            <div class="form-align">
+              <label class="form-label">Slot id</label>
+              <input type="text" class="form-control" [ngModel]="slotDetails.id" name="id">
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-align">
+              <label class="form-label">Starts</label>
+                <input type="text" class="form-control" [ngModel]="slotDetails.attributes.starts | date: 'short'"  name="starts"  />
+            </div>
+          </div>
+        </div>
 
+        <div class="row">
+            <div class="col">
+              <div class="form-align">
+                <label class="form-label">Duration</label>
+                <input type="text" class="form-control" [ngModel]="getDuration(
+                    slotDetails.attributes.starts,
+                    slotDetails.attributes.ends
+                )" name="ends" />
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-align">
+                <label class="form-label">£</label>
+                <input type="text" class="form-control" [ngModel]="slotDetails.attributes.price | currency: 'GBP'" name="price"/> 
+              </div>
+            </div>
+          </div>
+      
+          <div class="row">
+            <div class="col">
+              <div class="form-align">
+                <label class="form-label">€</label>
+                <input type="text" class="form-control"  [ngModel]="priceEuro |currency: 'EUR'" name="priceEuro" />
+              </div> 
+            </div>
+            <div class="col">
+              <div class="form-align">
+                <label class="form-label">Availabilities</label>
+                <input type="text" class="form-control" [ngModel]="slotDetails.attributes.availabilities" name="availabilities"/>
+              </div>
+            </div>
+          </div>
+       
+      </form>
+      <div>
+        <button type="submit" class="btn btn-primary" onclick="history.back()">Back</button>
+       </div>

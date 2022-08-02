@@ -1,0 +1,6 @@
+Explanatory notes:
+
+To see the details of an individual slot, all the result are pulled using observable pipe in SlotSearchComponent from state management and filtering the array of data based on SlotId in ngOnInit().
+
+To display used bootstrap form and css for background color.
+

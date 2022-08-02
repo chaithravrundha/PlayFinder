@@ -1,37 +1,51 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { ResultData } from '../models/search.model';
+import { Component, OnInit} from "@angular/core";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
+import { select, Store } from "@ngrx/store";
+import { HumanizeDuration, HumanizeDurationLanguage } from "humanize-duration-ts";
+import * as moment from "moment";
+import { Observable } from "rxjs";
+import { ISlot } from "../models/search.model";
+import * as fromSlots from '../store/slots/selectors/search-slot.selectors';
 
 @Component({
-  selector: 'app-search-slot',
-  templateUrl: './search-slot.component.html',
-  styleUrls: ['./search-slot.component.scss']
+    selector: "app-search-slot",
+    templateUrl: "./search-slot.component.html",
+    styleUrls: ["./search-slot.component.scss"],
 })
-export class SearchSlotComponent implements OnInit {
-
-    results$: Observable<ResultData[]>;
-    result$: Observable<ResultData>;
-
-    public result: ResultData;
-
+export class SearchSlotComponent implements OnInit{
+    results$: Observable<ISlot[]>;
+    slotDetails: ISlot;
+    slotId: string;
+    priceEuro: any
+    
     constructor(
-        // private store: Store<{ slots: ResultData[] }>,
+        private route: ActivatedRoute,
+        private store: Store<{ slot: ISlot}>
     ) {
-        // this.results$ = this.store.pipe(select('slots'));
-        // this.store.dispatch({ type: '[Slots] Get One Slot', result_id: this.route.snapshot.params.id });
-
+        this.slotId = route.snapshot.params.id;
+        this.results$ = this.store.pipe(
+            select(fromSlots.selectSlotsEntities)
+          );
     }
 
+    public langService: HumanizeDurationLanguage =
+        new HumanizeDurationLanguage();
+    public humanizer: HumanizeDuration = new HumanizeDuration(this.langService);
+    
     ngOnInit(): void {
-        // this.results$.subscribe(results => {
-        //     if(results.length !== 0) {
-        //         console.log(results);
-        //         console.log(this.route.snapshot.params.id);
-        //         const result = results.filter(result => result.id = this.route.snapshot.params.id);
-        //         console.log(result);
-        //         // else dispatch event to get the results from API
-        //     }
-        // });
+        this.results$.subscribe(result => {
+            this.slotDetails = result.filter(x => x.id === this.slotId)[0];
+             this.priceEuro = Number(this.slotDetails.attributes.price) * (1.13)
+            
+        });
+    }
+
+    public getDuration(start: string, end: string) {
+        const duration = moment
+            .duration(moment(end).diff(moment(start)))
+            .asMilliseconds();
+        return this.humanizer.humanize(duration, { serialComma: false });
     }
 
 }
